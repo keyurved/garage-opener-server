@@ -27,6 +27,7 @@ app.use(async (req, res, next) => {
             next();
         } catch (err) {
             console.error(err);
+            res.sendStatus(403);
         }
     } else {
         //next();
