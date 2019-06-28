@@ -24,10 +24,10 @@ app.use(async (req, res, next) => {
     if (req.header('X-Auth')) {
         try {
             await admin.auth().verifyIdToken(req.header('X-Auth'));
+            next();
         } catch (err) {
             console.error(err);
         }
-        next();
     } else {
         //next();
         res.sendStatus(403);
