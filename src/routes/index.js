@@ -3,7 +3,7 @@ const garageRoutes = require('./garage');
 
 function construct(app) {
 
-    app.use('/login', () => {
+    app.use('/login', (_req, res) => {
         res.json({'message': 'ok'});
     });
     app.use('/garage', garageRoutes);
