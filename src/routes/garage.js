@@ -12,7 +12,7 @@ router.get('/:id', async (req, res) => {
     const url = `${openerConfig.base_url}/garage/${id}`;
 
     try {
-        let result = await fetch(url, { method: 'GET', headers: headers, timeout: TIMEOUT});
+        let result = await fetch(url, { method: 'GET', headers: headers, timeout: TIMEOUT });
         let data = await result.json();
         res.json(data);
     } catch (err) {
@@ -25,9 +25,21 @@ router.get('/:id', async (req, res) => {
 router.post('/open/:id', async (req, res) => {
     const id = req.params.id;
     const url = `${openerConfig.base_url}/open/${id}`;
+    let timeout = TIMEOUT;
+    let delay = req.header('Delay');
+    let resHeaders = { ...headers };
+
+    if (delay) {
+        delay = parseInt(delay);
+        resHeaders['Delay'] = delay;
+
+        if (delay * 1000 > timeout) {
+            timeout = (5 + delay) * 1000;
+        }
+    }
 
     try {
-        let result = await fetch(url, { method: 'POST', headers: headers, timeout: TIMEOUT});
+        let result = await fetch(url, { method: 'POST', headers: resHeaders, timeout: timeout });
         let data = await result.json();
         res.json(data);
     } catch (err) {
@@ -40,9 +52,21 @@ router.post('/open/:id', async (req, res) => {
 router.post('/close/:id', async (req, res) => {
     const id = req.params.id;
     const url = `${openerConfig.base_url}/close/${id}`;
+    let timeout = TIMEOUT;
+    let delay = req.header('Delay');
+    let resHeaders = { ...headers };
+
+    if (delay) {
+        delay = parseInt(delay);
+        resHeaders['Delay'] = delay;
+
+        if (delay * 1000> timeout) {
+            timeout = (5 + delay) * 1000;
+        }
+    }
 
     try {
-        let result = await fetch(url, { method: 'POST', headers: headers, timeout: TIMEOUT});
+        let result = await fetch(url, { method: 'POST', headers: resHeaders, timeout: timeout });
         let data = await result.json();
         res.json(data);
     } catch (err) {
