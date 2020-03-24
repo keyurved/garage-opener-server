@@ -30,6 +30,7 @@ app.use(async (req, res, next) => {
         }
     } else {
         //next();
+	console.log("UNAUTHORIZED");
         res.sendStatus(403);
     }
 });
