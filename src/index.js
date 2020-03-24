@@ -4,9 +4,7 @@ const bodyParser = require('body-parser');
 const configRoutes = require('./routes');
 const admin = require('firebase-admin');
 
-admin.initializeApp({
-    credential: admin.credential.applicationDefault()
-})
+admin.initializeApp();
 
 const app = express();
 const port = 8080;
@@ -21,6 +19,7 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 app.use(async (req, res, next) => {
+    console.log(req);
     if (req.header('X-Auth')) {
         try {
             await admin.auth().verifyIdToken(req.header('X-Auth'));
