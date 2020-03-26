@@ -1,13 +1,26 @@
 const express = require('express');
+const fs = require('fs');
+const http = require('http');
+const https = require('https');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const configRoutes = require('./routes');
 const admin = require('firebase-admin');
+require('dotenv').config()
 
 admin.initializeApp();
 
 const app = express();
-const port = 8080;
+const httpPort = 8080;
+const httpsPort = 8443;
+let credentials = {};
+
+if (process.env.USE_HTTPS) {
+    credentials = {
+        key: fs.readFileSync(process.env.HTTPS_KEY),
+        cert: fs.readFileSync(process.env.HTTPS_CERT),
+    }
+}
 
 var corsOptions = {
   origin: '*',
@@ -36,6 +49,12 @@ app.use(async (req, res, next) => {
 
 configRoutes(app);
 
-app.listen(port, () => {
-    console.log(`Listening on http://localhost:${port}`);
-})
+if (process.env.USE_HTTPS) {
+    https.createServer(credentials, app).listen(httpsPort, () => {
+        console.log(`Listening on https://localhost:${httpsPort}`);
+    })
+} else {
+    http.createServer(app).listen(httpPort, () => {
+        console.log(`Listening on http://localhost:${httpPort}`);
+    })
+}
